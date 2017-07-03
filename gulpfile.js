@@ -2,6 +2,9 @@ const gulp = require('gulp');
 const gulpLoadPlugins = require('gulp-load-plugins');
 const browserSync = require('browser-sync').create();
 const del = require('del');
+const autoprefixer = require('autoprefixer');
+const postcss = require('gulp-postcss');
+const mqpacker = require('css-mqpacker');
 const runSequence = require('run-sequence');
 
 const $ = gulpLoadPlugins();
@@ -10,17 +13,13 @@ const reload = browserSync.reload;
 var dev = true;
 
 gulp.task('styles', () => {
-  var processors = [
-    autoprefixer(),
-    mqpacker
-  ];
   return gulp.src('app/styles/main.scss')
     .pipe($.if(dev, $.sourcemaps.init()))
     .pipe($.sass.sync({
       outputStyle: 'expanded',
       precision: 2
     }).on('error', $.sass.logError))
-    .pipe(postcss(processors))
+    .pipe(postcss([mqpacker, autoprefixer()]))
     //CSS Minification goes on HTML task
     .pipe($.if(dev, $.sourcemaps.write(), gulp.dest('dist/')))
     .pipe(gulp.dest('.tmp/'))
