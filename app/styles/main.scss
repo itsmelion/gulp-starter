@@ -8,40 +8,22 @@
   font-style: normal;
 }
 
-@font-face {
-  font-family: 'Gotham Book';
-  src: url('fonts/Gotham-Book.eot');
-  src: url('fonts/Gotham-Book.woff') format('woff'), url('fonts/Gotham-Book.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Gotham ExtraLight';
-  src: url('fonts/Gotham-ExtraLight.eot');
-  src: url('fonts/Gotham-ExtraLight.woff') format('woff'), url('fonts/Gotham-ExtraLight.ttf') format('truetype');
-  font-weight: 200;
-  font-style: normal;
-}
-
 // bower & vendors
-@import "flexboxgrid";
 @import "reset";
 // Telas
 @import "variaveis";
-@import "menu";
-@import "banner";
-@import "intro";
-@import "footer";
-@import "components/checkbox",
-"components/slider",
-"components/select";
 html,
 body {
-  background-color: white;
   font-size: 100%;
   font-size-adjust: 200%;
-  font-family: "Gotham Bold", "Roboto", sans-serif;
+  font-family: sans-serif;
+}
+
+.container {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 100%;
 }
 
 a {
@@ -52,14 +34,4 @@ a {
 
 .text-center {
   text-align: center;
-}
-
-.brand-icon {
-  width: 86px;
-  a img {
-    position: relative;
-    width: 100%;
-    display: block;
-    height: auto;
-  }
 }
