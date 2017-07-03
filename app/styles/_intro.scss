@@ -1,0 +1,142 @@
+#Card300 {
+  min-height: 418px;
+  background-image: url('images/parallax.jpg');
+  margin-top: 150px;
+  position: relative;
+  border-radius: 10px;
+  color: white;
+  .mask {
+    border-radius: 10px;
+    position: absolute;
+    background-color: rgba(45, 110, 224, .82);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    padding: 0 2em;
+  }
+  .card-wrap {
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  .phone {
+    img {
+      position: relative;
+      top: 0;
+      right: 0;
+      width: 159px;
+      height: auto;
+      margin-top: -120px;
+    }
+  }
+  #Card300-lead {
+    max-width: 500px;
+    p {
+      font-family: $Gotham-Book;
+      font-size: 12px;
+      line-height: 1.4;
+      letter-spacing: 1px;
+    }
+    h2 {
+      font-family: $Poppins;
+      font-size: 36px;
+      margin-bottom: 36px;
+      font-weight: 700;
+    }
+  }
+  .call-to-action,
+  .selects {
+    flex-grow: 1;
+  }
+  .call-to-action {
+    margin-bottom: 2em;
+    margin-top: 3em;
+  }
+  button {
+    line-height: 42px;
+    background: rgba(255, 255, 255, .1);
+    border: none;
+    border-radius: 36px;
+    outline: none;
+    padding: 0 2em;
+    min-width: 140px;
+    vertical-align: middle;
+    font-size: .8rem;
+    color: white;
+    text-transform: uppercase;
+    margin: 0 3em;
+    font-family: $Gotham-Bold;
+    @include transition;
+    &.mail-send {
+      background: white;
+      color: black
+    }
+    &.apple-btn svg {
+      fill: white;
+      top: 4px;
+      position: relative;
+      margin-right: 10px;
+    }
+    &:focus,
+    &:hover {
+      background: white;
+      color: $blue;
+      svg {
+        fill: $blue;
+      }
+    }
+  }
+  input[type=email] {
+    line-height: 42px;
+    background: rgba(255, 255, 255, .4);
+    border: none;
+    vertical-align: middle;
+    border-radius: 6px;
+    outline: none;
+    padding: 0 90px 0 2em;
+    margin-right: -70px;
+    color: white;
+    @include transition;
+    &:focus {
+      background-color: white;
+      color: $blue;
+    }
+    &::-webkit-input-placeholder {
+      /* Chrome */
+      color: white;
+    }
+    &:focus::-webkit-input-placeholder {
+      color: lighten($blue, 15%);
+    }
+    &:-ms-input-placeholder {
+      /* IE 10+ */
+      color: white;
+      @include transition;
+    }
+    &:focus:-ms-input-placeholder {
+      color: lighten($blue, 15%);
+    }
+    &::-moz-placeholder {
+      /* Firefox 19+ */
+      color: white;
+      opacity: 1;
+      @include transition;
+    }
+    &:focus::-moz-placeholder {
+      color: lighten($blue, 15%);
+    }
+    &:-moz-placeholder {
+      /* Firefox 4 - 18 */
+      color: white;
+      opacity: 1;
+      @include transition;
+    }
+    &:focus:-moz-placeholder {
+      color: lighten($blue, 15%);
+    }
+  }
+}
+
+.background {
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}

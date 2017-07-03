@@ -1,0 +1,26 @@
+header {
+  background: $startGradient;
+  background: -moz-linear-gradient(37deg, $startGradient 0%, $endGradient 100%);
+  background: -webkit-gradient(left bottom, right top, color-stop(0%, $startGradient), color-stop(100%, $endGradient));
+  background: -webkit-linear-gradient(37deg, $startGradient 0%, $endGradient 100%);
+  background: -o-linear-gradient(37deg, $startGradient 0%, $endGradient 100%);
+  background: -ms-linear-gradient(37deg, $startGradient 0%, $endGradient 100%);
+  background: linear-gradient(37deg, $startGradient 0%, $endGradient 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5ac46', endColorstr='#ee6264', GradientType=1);
+  color: white;
+  margin-top: 60px;
+  padding-top: 80px;
+  font-family: $Gotham-XLite;
+  h1 {
+    font-weight: 100;
+    font-size: 2.8vmax;
+    margin-bottom: 26px;
+    letter-spacing: -1px;
+    span {
+      font-size: 4.5vmax;
+      text-transform: uppercase;
+      line-height: 1.6;
+      letter-spacing: 7px;
+    }
+  }
+}

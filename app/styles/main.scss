@@ -1,0 +1,65 @@
+// Fonts Typography
+@import url('https://fonts.googleapis.com/css?family=Montserrat:300,800|Poppins:300,400,500,700');
+@font-face {
+  font-family: 'Gotham Bold';
+  src: url('fonts/Gotham-Bold.eot');
+  src: url('fonts/Gotham-Bold.woff') format('woff'), url('fonts/Gotham-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gotham Book';
+  src: url('fonts/Gotham-Book.eot');
+  src: url('fonts/Gotham-Book.woff') format('woff'), url('fonts/Gotham-Book.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Gotham ExtraLight';
+  src: url('fonts/Gotham-ExtraLight.eot');
+  src: url('fonts/Gotham-ExtraLight.woff') format('woff'), url('fonts/Gotham-ExtraLight.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+}
+
+// bower & vendors
+@import "flexboxgrid";
+@import "reset";
+// Telas
+@import "variaveis";
+@import "menu";
+@import "banner";
+@import "intro";
+@import "footer";
+@import "components/checkbox",
+"components/slider",
+"components/select";
+html,
+body {
+  background-color: white;
+  font-size: 100%;
+  font-size-adjust: 200%;
+  font-family: "Gotham Bold", "Roboto", sans-serif;
+}
+
+a {
+  cursor: pointer;
+  outline: none;
+  text-decoration: none;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.brand-icon {
+  width: 86px;
+  a img {
+    position: relative;
+    width: 100%;
+    display: block;
+    height: auto;
+  }
+}

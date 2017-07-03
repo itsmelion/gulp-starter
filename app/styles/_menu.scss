@@ -1,0 +1,54 @@
+nav {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1100;
+  background-color: white;
+  ul {
+    height: 100%
+  }
+  li.menu-item {
+    list-style: none;
+    line-height: 1.6;
+    font-size: 1rem;
+    font-weight: 700;
+    font-stretch: .1em;
+    color: $blue;
+    border-bottom: 3px solid transparent;
+    @include transition;
+    >a {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      box-sizing: border-box;
+      display: block;
+      padding: 18px 6px 10px 6px;
+    }
+    &.active {
+      color: $orange;
+      border-bottom-color: $orange;
+    }
+    &:not(.brand-icon):hover,
+    &:focus {
+      color: lighten($blue, 15%);
+      border-bottom-color: lighten($blue, 15%);
+      &.active {
+        color: lighten($orange, 15%);
+        border-bottom-color: lighten($orange, 15%);
+      }
+      .svg-fill {
+        fill: lighten($blue, 15%);
+      }
+    }
+  }
+  .social svg {
+    width: 16px;
+    height: 12px;
+    margin: auto;
+    transition: .2s ease;
+  }
+}
+
+.svg-fill {
+  fill: $blue;
+}

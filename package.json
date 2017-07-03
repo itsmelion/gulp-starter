@@ -1,0 +1,41 @@
+{
+  "private": true,
+  "engines": {
+    "node": ">=7.10.0"
+  },
+  "scripts": {
+    "start": "gulp serve",
+    "serve": "gulp serve:dist",
+    "compile": "gulp"
+  },
+  "Dependencies": {
+    "jquery": "latest",
+    "gridlex": "latest",
+    "jquery.scrollto": "latest",
+    "scroll-triggers": "latest"
+  },
+  "devDependencies": {
+    "browser-sync": ">=2.18.12",
+    "del": ">=3.0.0",
+    "gulp": ">=3.9.1",
+    "gulp-postcss": ">=7.0.0",
+    "autoprefixer": "latest",
+    "cssnano": "latest",
+    "css-mqpacker": "latest",
+    "gulp-babel": ">=6.1.2",
+    "gulp-cache": ">=0.4.6",
+    "gulp-eslint": ">=4.0.0",
+    "gulp-filter": ">=5.0.0",
+    "gulp-htmlmin": ">=3.0.0",
+    "gulp-if": ">=2.0.2",
+    "gulp-imagemin": ">=3.3.0",
+    "gulp-load-plugins": ">=1.5.0",
+    "gulp-sass": ">=3.1.0",
+    "gulp-size": ">=2.1.0",
+    "gulp-sourcemaps": ">=2.6.0",
+    "gulp-useref": ">=3.1.2",
+    "main-bower-files": ">=2.13.1",
+    "run-sequence": ">=2.0.0",
+    "wiredep": ">=4.0.0"
+  }
+}
