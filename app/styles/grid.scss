@@ -1,0 +1,107 @@
+$grid-attribute: class !default;
+$grid-class: layout !default;
+$grid-column: flex !default;
+$grid-gutter: 1rem !default;
+$container-width: 80em;
+$grid-sm: "screen and (max-width: 48em)" !default; // max 768px
+$grid-md: "screen and (max-width: 64em)" !default; // max 1024px
+$grid-lg: "screen and (max-width: 80em)" !default; // max 1280px
+[#{$grid-attribute}*="#{$grid-class}"] {
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: auto;
+  box-sizing: border-box;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  &[#{$grid-attribute}*="-column"] {
+    flex-direction: column;
+    -webkit-box-orient: vertical;
+  }
+  &[#{$grid-attribute}*="-row"] {
+    flex-direction: row;
+    -webkit-box-orient: horizontal;
+  }
+  &[#{$grid-attribute}*="-reverse"] {
+    flex-direction: row-reverse;
+    -webkit-box-direction: reverse;
+  }
+  &[#{$grid-attribute}*="-column-reverse"] {
+    flex-direction: column-reverse;
+    -webkit-box-direction: reverse;
+  }
+}
+
+[#{$grid-attribute}*="#{$grid-column}"] {
+  box-sizing: border-box;
+  flex: 1;
+  min-width: 0;
+  &[#{$grid-attribute}*="-none"] {
+    flex: 0 0 auto;
+  }
+  &[#{$grid-attribute}*="-initial"] {
+    flex: 0 1 auto;
+  }
+  &[#{$grid-attribute}*="-auto"] {
+    flex: 1 1 auto;
+  }
+  &[#{$grid-attribute}*="-nogrow"] {
+    flex: 0 1 auto;
+  }
+  &[#{$grid-attribute}*="-noshrink"] {
+    flex: 1 0 auto;
+  }
+  &[#{$grid-attribute}*="-shrink"] {
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: auto;
+  }
+  &[#{$grid-attribute}*="-grow"] {
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 1;
+    flex: 1 1 100%;
+  }
+}
+
+[#{$grid-attribute}*="#{$grid-class}-"] {
+  // No Wrapping
+  &[#{$grid-attribute}*="-nowrap"] {
+    flex-wrap: nowrap;
+  }
+  &[#{$grid-attribute}*="-start"] {
+    align-items: flex-start;
+  }
+  &[#{$grid-attribute}*="-end"] {
+    justify-content: flex-end;
+    align-self: flex-end;
+    align-items: flex-end;
+    margin-left: auto;
+  }
+  &[#{$grid-attribute}*="-center"] {
+    justify-content: center;
+    align-items: center;
+  }
+  &[#{$grid-attribute}*="-between"] {
+    justify-content: space-between;
+    -webkit-box-pack: justify;
+  }
+  &[#{$grid-attribute}*="-around"] {
+    justify-content: space-around;
+  }
+  &[#{$grid-attribute}*="-stretch"] {
+    display: flex;
+    align-content: stretch;
+    align-items: stretch;
+    -webkit-box-align: stretch;
+    >* {
+      flex: 1 0 100%;
+    }
+  }
+}
+
+.container {
+  max-width: $container-width; // Set the width to the one we will set in the variables
+  margin: auto; // Always align it to the center  
+}
