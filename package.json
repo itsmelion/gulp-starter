@@ -4,8 +4,8 @@
     "node": ">=7.10.0"
   },
   "scripts": {
-    "preinstall": "sudo npm i -g gulp sync-pkg",
-    "postinstall": "sync-pkg",
+    "preinstall": "sudo npm i -g gulp sync-pkg bower",
+    "postinstall": "sync-pkg && bower install",
     "start": "gulp serve",
     "serve": "gulp serve:dist",
     "compile": "gulp"
