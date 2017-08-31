@@ -1,0 +1,15 @@
+// Fonts Typography
+// @import url('https://fonts.googleapis.com/css?family=Montserrat:300,800|Poppins:300,400,500,700');
+// @font-face {
+//   font-family: 'Gotham Bold';
+//   src: url('fonts/Gotham-Bold.eot');
+//   src: url('fonts/Gotham-Bold.woff') format('woff'), url('fonts/Gotham-Bold.ttf') format('truetype');
+//   font-weight: bold;
+//   font-style: normal;
+// }
+// bower & vendors
+@import "~flamework/flamework";
+html,
+body {
+  background: #333;
+}

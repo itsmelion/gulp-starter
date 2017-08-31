@@ -11,7 +11,8 @@
   "Dependencies": {
     "jquery": "latest",
     "jquery.scrollto": "latest",
-    "scroll-triggers": "latest"
+    "scroll-triggers": "latest",
+    "flamework": "latest"
   },
   "devDependencies": {
     "autoprefixer": "latest",

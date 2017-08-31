@@ -11,7 +11,7 @@ const concat = require('gulp-concat');
 const uglify = require('gulp-uglify');
 const cache = require('gulp-cache');
 const htmlmin = require('gulp-htmlmin');
-const gulpIf = require('gulp-if');
+const gulpif = require('gulp-if');
 const imageMin = require('gulp-imagemin');
 const sass = require('gulp-sass');
 const maps = require('gulp-sourcemaps');
@@ -24,107 +24,96 @@ const wireDep = require('wiredep');
 const reload = browserSync.reload;
 
 var dev = true;
+const source = './src';
+const dist = './dist';
 
-gulp.task('styles', () => {
-  return gulp.src('app/styles/main.scss')
-    .pipe($.if(dev, $.sourcemaps.init()))
-    .pipe($.sass.sync({
+gulp.task('coreStyles', () => {
+  gulp.src(source + '/styles/main.scss')
+    .pipe(gulpif(dev, $.maps.init()))
+    .pipe(sass.sync({
       outputStyle: 'expanded',
-      precision: 2
-    }).on('error', $.sass.logError))
-    .pipe(postcss([mqpacker, autoprefixer()]))
-    //CSS Minification goes on HTML task
-    .pipe($.if(dev, $.sourcemaps.write(), gulp.dest('dist/')))
-    .pipe(gulp.dest('.tmp/'))
+      precision: 3
+    }).on('error', sass.logError))
+    .pipe(postcss([mqpacker(), autoprefixer(), cssnano({
+      safe: true,
+      autoprefixer: false
+    })]))
+    .pipe(gulpif(dev, maps.write(), gulp.dest(dist)))
+    .pipe(gulp.dest(dist))
+    .pipe(reload({
+      stream: true
+    }));
+});
+
+gulp.task('asyncStyles', () => {
+  gulp.src(source + '/styles/async.scss')
+    .pipe(gulpif(dev, maps.init()))
+    .pipe(sass.sync({
+      outputStyle: 'expanded',
+      precision: 3
+    }).on('error', sass.logError))
+    .pipe(postcss([mqpacker(), autoprefixer(), cssnano({
+      safe: true,
+      autoprefixer: false
+    })]))
+    .pipe(gulpif(dev, maps.write(), gulp.dest(dist)))
+    .pipe(gulp.dest(dist))
     .pipe(reload({
       stream: true
     }));
 });
 
 gulp.task('scripts', () => {
-  return gulp.src('app/scripts/**/*.js')
-    .pipe($.if(dev, $.sourcemaps.init()))
-    .pipe($.babel())
-    .pipe($.if(dev, $.sourcemaps.write('.'), gulp.dest('dist/scripts')))
-    .pipe(gulp.dest('.tmp/scripts'))
+  gulp.src(source + '/scripts/**/*.js')
+    .pipe(gulpif(dev, maps.init()))
+    .pipe(babel())
+    .pipe(eslint({
+      globals: [
+        'jQuery',
+        '$'
+      ],
+      envs: [
+        'browser'
+      ]
+    }))
+
+    .pipe(gulpif(dev, maps.write()))
+    .pipe(gulpif(!dev, uglify()))
+    .pipe(gulp.dest(dist))
     .pipe(reload({
       stream: true
     }));
 });
 
-function lint(files) {
-  return gulp.src(files)
-    .pipe($.eslint({
-      fix: true
-    }))
-    .pipe(reload({
-      stream: true,
-      once: true
-    }))
-    .pipe($.eslint.format())
-    .pipe($.if(!browserSync.active, $.eslint.failAfterError()));
-}
-
-gulp.task('lint', () => {
-  return lint('app/scripts/**/*.js')
-    .pipe(gulp.dest('app/scripts'));
-});
-
-gulp.task('html', ['styles', 'scripts'], () => {
-  return gulp.src('app/*.html')
-    .pipe($.useref({
-      searchPath: ['.tmp', 'app', 'dist', '.']
-    }))
-    .pipe($.if(/\.js$/, $.uglify({
-      compress: {
-        drop_console: true
-      }
-    })))
-    .pipe($.if(/\.css$/, $.cssnano({
-      safe: true,
-      autoprefixer: false
-    })))
-    .pipe($.if(/\.html$/, $.htmlmin({
+gulp.task('html', () => {
+  gulp.src(source + '/**/*.html')
+    .pipe(htmlmin({
       collapseWhitespace: true,
       minifyCSS: true,
-      minifyJS: {
-        compress: {
-          drop_console: true
-        }
-      },
       processConditionalComments: true,
       removeComments: true,
-      removeEmptyAttributes: true,
+      removeEmptyAttributes: false,
       removeScriptTypeAttributes: true,
       removeStyleLinkTypeAttributes: true
-    })))
-    .pipe(gulp.dest('dist'));
+    }))
+    .pipe(gulp.dest(dist));
 });
 
 gulp.task('images', () => {
-  return gulp.src('app/images/**/*')
-    .pipe(gulp.dest('dist/images'));
+  gulp.src(source + '/images/**/*')
+    .pipe(imageMin({
+      interlaced: true,
+      progressive: true,
+      optimizationLevel: 5,
+      svgoPlugins: [{
+        removeViewBox: true
+      }]
+    }))
+    .pipe(gulp.dest(dist + '/images'));
 });
-
-gulp.task('fonts', () => {
-  return gulp.src(require('main-bower-files')('**/*.{eot,svg,ttf,woff,woff2}', function (err) {})
-      .concat('app/fonts/**/*'))
-    .pipe($.if(dev, gulp.dest('.tmp/fonts'), gulp.dest('dist/fonts')));
-});
-
-gulp.task('extras', () => {
-  return gulp.src([
-    'app/*',
-    '!app/*.html'
-  ], {
-    dot: true
-  }).pipe(gulp.dest('dist'));
-});
-
-gulp.task('clean', del.bind(null, ['.tmp', 'dist']));
 
 gulp.task('serve', () => {
-  runSequence(['clean'], ['styles', 'scripts', 'fonts'], () => {
+  runsequence(['mainStyles', 'asyncStyles', 'scripts', 'images'], () => {
     browserSync.init({
       notify: true,
       port: 9000,
@@ -137,38 +126,38 @@ gulp.task('serve', () => {
     });
 
     gulp.watch([
-      'app/*.html',
-      'app/images/**/*',
-      '.tmp/fonts/**/*'
+      source + '/**/*.html',
+      source + '/images/**/*',
     ]).on('change', reload);
 
-    gulp.watch('app/styles/**/*.scss', ['styles']);
-    gulp.watch('app/scripts/**/*.js', ['scripts']);
-    gulp.watch('app/fonts/**/*', ['fonts']);
+    gulp.watch(source + '/styles/**/*.scss', ['mainStyles', 'asyncStyles']);
+    gulp.watch(source + '/scripts/**/*.js', ['scripts']);
   });
 });
 
 gulp.task('serve:dist', ['default'], () => {
   browserSync.init({
-    notify: false,
+    notify: true,
     port: 9000,
     server: {
-      baseDir: ['dist']
+      baseDir: dist
     }
   });
 });
 
 
-gulp.task('build', ['lint', 'scripts', 'styles', 'html', 'images', 'fonts', 'extras'], () => {
-  return gulp.src('dist/**/*').pipe($.size({
-    title: 'build',
-    gzip: true
-  }));
+gulp.task('build', ['scripts', 'mainStyles', 'asyncStyles', 'html', 'images'], () => {
+  gulp.src(source + '/**/*')
+    .pipe(gulp.dest(dist))
+    .pipe(size({
+      title: 'build',
+      gzip: true
+    }));
 });
 
 gulp.task('default', () => {
-  return new Promise(resolve => {
+  new Promise(resolve => {
     dev = false;
-    runSequence(['clean'], 'build', resolve);
+    runSequence('build', resolve);
   });
 });
