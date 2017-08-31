@@ -26,36 +26,7 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": "latest",
-    "jquery.scrollto": "latest",
-    "scroll-triggers": "latest",
-    "flamework": "latest"
-  },
-  "devDependencies": {
-    "autoprefixer": "latest",
-    "babel-core": "latest",
-    "browser-sync": "latest",
-    "css-mqpacker": "latest",
-    "cssnano": "latest",
-    "del": "latest",
-    "gulp": "latest",
-    "gulp-babel": "latest",
-    "gulp-cache": "latest",
-    "gulp-concat": "latest",
-    "gulp-eslint": "latest",
-    "gulp-gzip": "^1.4.0",
-    "gulp-htmlmin": "latest",
-    "gulp-if": "latest",
-    "gulp-imagemin": "latest",
-    "gulp-postcss": "latest",
-    "gulp-sass": "latest",
-    "gulp-size": "latest",
-    "gulp-sourcemaps": "latest",
-    "gulp-uglify": "latest",
-    "main-bower-files": "latest",
-    "run-sequence": "latest",
-    "sync-pkg": "latest",
-    "wiredep": "latest"
+    "jquery": "latest"
   },
   "version": "0.1.0",
   "protocol": "https:",
@@ -86,5 +57,7 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "repository": "alia-code/gulp-starter",
+  "host_raw": "https://raw.githubusercontent.com"
 }

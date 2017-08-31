@@ -4,8 +4,8 @@
     "node": ">=7.10.0"
   },
   "scripts": {
-    "preinstall": "sudo npm i -g gulp sync-pkg bower",
-    "postinstall": "sync-pkg && bower install",
+    "preinstall": "sudo npm i -g gulp bower",
+    "postinstall": "bower install",
     "start": "gulp serve",
     "serve": "gulp serve:dist",
     "compile": "gulp"
@@ -34,12 +34,11 @@
     "main-bower-files": "latest",
     "run-sequence": "latest",
     "sync-pkg": "latest",
-    "wiredep": "latest"
+    "wiredep": "latest",
+    "flamework": "latest"
   },
   "dependencies": {
     "jquery": "latest",
-    "jquery.scrollto": "latest",
-    "scroll-triggers": "latest",
-    "flamework": "latest"
+    "gsap": "latest"
   }
 }

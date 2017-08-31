@@ -186,9 +186,11 @@ gulp.task('gzip', () => {
     .pipe(gulp.dest(dist));
 });
 
-
+gulp.task('syncpkg', () => {
+  syncpkg(['!devDependencies'])
+});
 gulp.task('build', () => {
-  runsequence(['scripts', 'coreStyles', 'asyncStyles', 'html', 'images'], 'gzip')
+  runsequence('syncpkg', ['scripts', 'coreStyles', 'asyncStyles', 'html', 'images'], 'gzip')
 });
 
 gulp.task('default', () => {
