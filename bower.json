@@ -1,0 +1,29 @@
+{
+  "name": "gulp-starter",
+  "description": "starting point for a cool gulp compilation",
+  "main": "gulpfile.js",
+  "authors": [
+    "Christhopher Lion"
+  ],
+  "license": "CC",
+  "keywords": [
+    "gulp",
+    "scaffold",
+    "boilerplate",
+    "build",
+    "html",
+    "minification"
+  ],
+  "homepage": "alia-cloud.appspot.com",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.2.1"
+  }
+}

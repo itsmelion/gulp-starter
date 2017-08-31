@@ -18,8 +18,9 @@ const maps = require('gulp-sourcemaps');
 const runsequence = require('run-sequence');
 const size = require('gulp-size');
 const mainBowerFiles = require('main-bower-files');
-const syncPkg = require('sync-pkg');
-const wireDep = require('wiredep');
+const syncpkg = require('sync-pkg');
+const wiredep = require('wiredep').stream;
+const gzip = require('gulp-gzip');
 
 const reload = browserSync.reload;
 
@@ -99,6 +100,45 @@ gulp.task('html', () => {
     .pipe(gulp.dest(dist));
 });
 
+// TODO: Sync bower.json with package.json
+gulp.task('sync', () => {
+  return syncpkg();
+});
+// Insect Deps into HTML
+gulp.task('bower', () => {
+  return gulp.src(source + '/index.html')
+    .pipe(wiredep({
+
+      dependencies: true, // default: true  
+      includeSelf: true, // default: false 
+
+      overrides: {
+        // see `Bower Overrides` section below. 
+        // 
+        // This inline object offers another way to define your overrides if 
+        // modifying your project's `bower.json` isn't an option. 
+      },
+
+      fileTypes: {
+        // defaults: 
+        html: {
+          block: /(([ \t]*)<!--\s*bower:*(\S*)\s*-->)(\n|\r|.)*?(<!--\s*endbower\s*-->)/gi,
+          detect: {
+            js: /<script.*src=['"]([^'"]+)/gi,
+            css: /<link.*href=['"]([^'"]+)/gi
+          },
+          replace: {
+            js: '<script async defer src="{{filePath}}"></script>',
+            css: '<link async defer rel="stylesheet" href="{{filePath}}" />'
+          }
+        }
+
+      }
+
+    }))
+    .pipe(gulp.dest(source + '/index.html'))
+});
+
 gulp.task('images', () => {
   gulp.src(source + '/images/**/*')
     .pipe(imageMin({
@@ -113,7 +153,7 @@ gulp.task('images', () => {
 });
 
 gulp.task('serve', () => {
-  runsequence(['coreStyles', 'asyncStyles', 'scripts', 'images'], () => {
+  runsequence('build', () => {
     browserSync.init({
       notify: true,
       port: 9000,
@@ -145,14 +185,15 @@ gulp.task('serve:dist', ['default'], () => {
   });
 });
 
+gulp.task('gzip', () => {
+  gulp.src([dist + '/*.js', dist + './dist/*.css'])
+    .pipe(gzip())
+    .pipe(gulp.dest(dist));
+});
 
-gulp.task('build', ['scripts', 'coreStyles', 'asyncStyles', 'html', 'images'], () => {
-  gulp.src(source + '/**/*')
-    .pipe(gulp.dest(dist))
-    .pipe(size({
-      title: 'build',
-      gzip: true
-    }));
+
+gulp.task('build', () => {
+  runsequence(['scripts', 'coreStyles', 'asyncStyles', 'html', 'images'], 'gzip')
 });
 
 gulp.task('default', () => {
