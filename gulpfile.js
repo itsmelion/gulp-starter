@@ -88,25 +88,6 @@ gulp.task('scripts', () => {
 
 gulp.task('html', () => {
   gulp.src(source + '/**/*.html')
-    .pipe(htmlmin({
-      collapseWhitespace: true,
-      minifyCSS: true,
-      processConditionalComments: true,
-      removeComments: true,
-      removeEmptyAttributes: false,
-      removeScriptTypeAttributes: true,
-      removeStyleLinkTypeAttributes: true
-    }))
-    .pipe(gulp.dest(dist));
-});
-
-// TODO: Sync bower.json with package.json
-gulp.task('sync', () => {
-  return syncpkg();
-});
-// Insect Deps into HTML
-gulp.task('bower', () => {
-  return gulp.src(source + '/index.html')
     .pipe(wiredep({
 
       dependencies: true, // default: true  
@@ -128,15 +109,29 @@ gulp.task('bower', () => {
             css: /<link.*href=['"]([^'"]+)/gi
           },
           replace: {
-            js: '<script async defer src="{{filePath}}"></script>',
-            css: '<link async defer rel="stylesheet" href="{{filePath}}" />'
+            js: '<script async src="{{filePath}}"></script>',
+            css: '<link async href="{{filePath}}" />'
           }
         }
 
       }
 
     }))
-    .pipe(gulp.dest(source + '/index.html'))
+    .pipe(htmlmin({
+      collapseWhitespace: true,
+      minifyCSS: true,
+      processConditionalComments: true,
+      removeComments: true,
+      removeEmptyAttributes: false,
+      removeScriptTypeAttributes: true,
+      removeStyleLinkTypeAttributes: true
+    }))
+    .pipe(gulp.dest(dist));
+});
+
+// TODO: Sync bower.json with package.json
+gulp.task('sync', () => {
+  return syncpkg();
 });
 
 gulp.task('images', () => {
