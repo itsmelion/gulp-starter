@@ -8,12 +8,6 @@
     "serve": "gulp serve:dist",
     "compile": "gulp"
   },
-  "Dependencies": {
-    "jquery": "latest",
-    "jquery.scrollto": "latest",
-    "scroll-triggers": "latest",
-    "flamework": "latest"
-  },
   "devDependencies": {
     "autoprefixer": "latest",
     "browser-sync": "latest",
@@ -38,5 +32,11 @@
     "main-bower-files": "latest",
     "sync-pkg": "latest",
     "wiredep": "latest"
+  },
+  "dependencies": {
+    "jquery": "latest",
+    "jquery.scrollto": "latest",
+    "scroll-triggers": "latest",
+    "flamework": "latest"
   }
 }

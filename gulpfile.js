@@ -29,7 +29,7 @@ const dist = './dist';
 
 gulp.task('coreStyles', () => {
   gulp.src(source + '/styles/main.scss')
-    .pipe(gulpif(dev, $.maps.init()))
+    .pipe(gulpif(dev, maps.init()))
     .pipe(sass.sync({
       outputStyle: 'expanded',
       precision: 3
@@ -67,15 +67,15 @@ gulp.task('scripts', () => {
   gulp.src(source + '/scripts/**/*.js')
     .pipe(gulpif(dev, maps.init()))
     .pipe(babel())
-    .pipe(eslint({
-      globals: [
-        'jQuery',
-        '$'
-      ],
-      envs: [
-        'browser'
-      ]
-    }))
+    // .pipe(eslint({
+    //   globals: [
+    //     'jQuery',
+    //     '$'
+    //   ],
+    //   envs: [
+    //     'browser'
+    //   ]
+    // }))
 
     .pipe(gulpif(dev, maps.write()))
     .pipe(gulpif(!dev, uglify()))
@@ -113,12 +113,12 @@ gulp.task('images', () => {
 });
 
 gulp.task('serve', () => {
-  runsequence(['mainStyles', 'asyncStyles', 'scripts', 'images'], () => {
+  runsequence(['coreStyles', 'asyncStyles', 'scripts', 'images'], () => {
     browserSync.init({
       notify: true,
       port: 9000,
       server: {
-        baseDir: ['.tmp', 'app'],
+        baseDir: [source, dist],
         routes: {
           '/node_modules': 'node_modules'
         }
@@ -130,7 +130,7 @@ gulp.task('serve', () => {
       source + '/images/**/*',
     ]).on('change', reload);
 
-    gulp.watch(source + '/styles/**/*.scss', ['mainStyles', 'asyncStyles']);
+    gulp.watch(source + '/styles/**/*.scss', ['coreStyles', 'asyncStyles']);
     gulp.watch(source + '/scripts/**/*.js', ['scripts']);
   });
 });
@@ -146,7 +146,7 @@ gulp.task('serve:dist', ['default'], () => {
 });
 
 
-gulp.task('build', ['scripts', 'mainStyles', 'asyncStyles', 'html', 'images'], () => {
+gulp.task('build', ['scripts', 'coreStyles', 'asyncStyles', 'html', 'images'], () => {
   gulp.src(source + '/**/*')
     .pipe(gulp.dest(dist))
     .pipe(size({
