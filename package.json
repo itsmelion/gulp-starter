@@ -13,16 +13,19 @@
   "devDependencies": {
     "autoprefixer": "latest",
     "babel-core": "latest",
+    "babel-plugin-angularjs-annotate": "^0.8.0",
+    "babel-preset-es2015": "^6.24.1",
     "browser-sync": "latest",
     "css-mqpacker": "latest",
     "cssnano": "latest",
     "del": "latest",
+    "flamework": "latest",
     "gulp": "latest",
     "gulp-babel": "latest",
     "gulp-cache": "latest",
     "gulp-concat": "latest",
     "gulp-eslint": "latest",
-    "gulp-gzip": "^1.4.0",
+    "gulp-gzip": "latest",
     "gulp-htmlmin": "latest",
     "gulp-if": "latest",
     "gulp-imagemin": "latest",
@@ -34,11 +37,11 @@
     "main-bower-files": "latest",
     "run-sequence": "latest",
     "sync-pkg": "latest",
-    "wiredep": "latest",
-    "flamework": "latest"
+    "wiredep": "latest"
   },
   "dependencies": {
-    "jquery": "latest",
-    "gsap": "latest"
+    "angular": "^1.6.6",
+    "gsap": "latest",
+    "jquery": "latest"
   }
 }

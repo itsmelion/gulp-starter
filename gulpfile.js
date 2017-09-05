@@ -67,19 +67,24 @@ gulp.task('asyncStyles', () => {
 gulp.task('scripts', () => {
   gulp.src(source + '/scripts/**/*.js')
     .pipe(gulpif(dev, maps.init()))
-    .pipe(babel())
-    // .pipe(eslint({
-    //   globals: [
-    //     'jQuery',
-    //     '$'
-    //   ],
-    //   envs: [
-    //     'browser'
-    //   ]
-    // }))
-
+    .pipe(babel({
+      "presets": ["es2015"],
+      "plugins": ["angularjs-annotate"]
+    }))
     .pipe(gulpif(dev, maps.write()))
     .pipe(gulpif(!dev, uglify()))
+    .pipe(gulp.dest(dist))
+    .pipe(reload({
+      stream: true
+    }));
+});
+
+gulp.task('vendors', () => {
+  gulp.src(source + '/scripts/vendors/*.js')
+    .pipe(concat())
+    .pipe(gulpif(dev, maps.init()))
+    .pipe(uglify())
+    .pipe(gulpif(dev, maps.write()))
     .pipe(gulp.dest(dist))
     .pipe(reload({
       stream: true
@@ -91,7 +96,7 @@ gulp.task('html', () => {
     .pipe(wiredep({
 
       dependencies: true, // default: true  
-      includeSelf: true, // default: false 
+      includeSelf: false, // default: false 
 
       overrides: {
         // see `Bower Overrides` section below. 
