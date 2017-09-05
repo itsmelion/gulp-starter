@@ -195,7 +195,7 @@ gulp.task('syncpkg', () => {
   syncpkg(['!devDependencies'])
 });
 gulp.task('build', () => {
-  runsequence('syncpkg', ['scripts', 'coreStyles', 'asyncStyles', 'html', 'images'], 'gzip')
+  runsequence('syncpkg', ['vendors', 'scripts', 'coreStyles', 'asyncStyles', 'html', 'images'], 'gzip')
 });
 
 gulp.task('default', () => {
