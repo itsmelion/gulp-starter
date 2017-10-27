@@ -17,20 +17,26 @@ const sass = require('gulp-sass');
 const maps = require('gulp-sourcemaps');
 const runsequence = require('run-sequence');
 const size = require('gulp-size');
-const mainBowerFiles = require('main-bower-files');
-const syncpkg = require('sync-pkg');
-const wiredep = require('wiredep').stream;
 const gzip = require('gulp-gzip');
-
+const rev = require('gulp-rev');
+const newer = require('gulp-newer');
+const argv = require('yargs').argv;
 const reload = browserSync.reload;
 
 var dev = true;
 const source = './src';
-const dist = './dist';
+const dist = './build';
+
+const vendors = [
+  // "./node_modules/moment/min/moment.min.js",
+  // "./node_modules/gsap/TweenLite.js",
+  "./node_modules/photoswipe/dist/photoswipe.js",
+  "./node_modules/photoswipe/dist/photoswipe-ui-default.js",
+  source + '/vendors/*.js'
+];
 
 gulp.task('coreStyles', () => {
-  gulp.src(source + '/styles/main.scss')
-    .pipe(gulpif(dev, maps.init()))
+  return gulp.src(source + '/styles/main.scss')
     .pipe(sass.sync({
       outputStyle: 'expanded',
       precision: 3
@@ -39,7 +45,6 @@ gulp.task('coreStyles', () => {
       safe: true,
       autoprefixer: false
     })]))
-    .pipe(gulpif(dev, maps.write(), gulp.dest(dist)))
     .pipe(gulp.dest(dist))
     .pipe(reload({
       stream: true
@@ -47,8 +52,7 @@ gulp.task('coreStyles', () => {
 });
 
 gulp.task('asyncStyles', () => {
-  gulp.src(source + '/styles/async.scss')
-    .pipe(gulpif(dev, maps.init()))
+  return gulp.src(source + '/styles/async.scss')
     .pipe(sass.sync({
       outputStyle: 'expanded',
       precision: 3
@@ -57,7 +61,6 @@ gulp.task('asyncStyles', () => {
       safe: true,
       autoprefixer: false
     })]))
-    .pipe(gulpif(dev, maps.write(), gulp.dest(dist)))
     .pipe(gulp.dest(dist))
     .pipe(reload({
       stream: true
@@ -65,14 +68,12 @@ gulp.task('asyncStyles', () => {
 });
 
 gulp.task('scripts', () => {
-  gulp.src(source + '/scripts/**/*.js')
-    .pipe(gulpif(dev, maps.init()))
+  return gulp.src(source + '/scripts/app/**/*.js')
+    .pipe(concat('app.js'))
     .pipe(babel({
-      "presets": ["es2015"],
-      "plugins": ["angularjs-annotate"]
+      "presets": ["es2017"]
     }))
-    .pipe(gulpif(dev, maps.write()))
-    .pipe(gulpif(!dev, uglify()))
+    .pipe(gulpif(argv.production, uglify()))
     .pipe(gulp.dest(dist))
     .pipe(reload({
       stream: true
@@ -80,11 +81,19 @@ gulp.task('scripts', () => {
 });
 
 gulp.task('vendors', () => {
-  gulp.src(source + '/scripts/vendors/*.js')
-    .pipe(concat())
-    .pipe(gulpif(dev, maps.init()))
-    .pipe(uglify())
-    .pipe(gulpif(dev, maps.write()))
+  return gulp.src(vendors)
+    .pipe(concat('vendors.js'))
+    .pipe(gulpif(argv.production, uglify()))
+    .pipe(gulp.dest(dist))
+    .pipe(reload({
+      stream: true
+    }));
+});
+
+gulp.task('lazy', () => {
+  return gulp.src(['./node_modules/pace-js/pace.min.js', source + '/scripts/lazy/*.js'])
+    .pipe(concat('lazy.js'))
+    .pipe(gulpif(argv.production, uglify()))
     .pipe(gulp.dest(dist))
     .pipe(reload({
       stream: true
@@ -92,36 +101,7 @@ gulp.task('vendors', () => {
 });
 
 gulp.task('html', () => {
-  gulp.src(source + '/**/*.html')
-    .pipe(wiredep({
-
-      dependencies: true, // default: true  
-      includeSelf: false, // default: false 
-
-      overrides: {
-        // see `Bower Overrides` section below. 
-        // 
-        // This inline object offers another way to define your overrides if 
-        // modifying your project's `bower.json` isn't an option. 
-      },
-
-      fileTypes: {
-        // defaults: 
-        html: {
-          block: /(([ \t]*)<!--\s*bower:*(\S*)\s*-->)(\n|\r|.)*?(<!--\s*endbower\s*-->)/gi,
-          detect: {
-            js: /<script.*src=['"]([^'"]+)/gi,
-            css: /<link.*href=['"]([^'"]+)/gi
-          },
-          replace: {
-            js: '<script async src="{{filePath}}"></script>',
-            css: '<link async href="{{filePath}}" />'
-          }
-        }
-
-      }
-
-    }))
+  return gulp.src(source + '/**/*.html')
     .pipe(htmlmin({
       collapseWhitespace: true,
       minifyCSS: true,
@@ -134,17 +114,13 @@ gulp.task('html', () => {
     .pipe(gulp.dest(dist));
 });
 
-// TODO: Sync bower.json with package.json
-gulp.task('sync', () => {
-  return syncpkg();
-});
-
 gulp.task('images', () => {
-  gulp.src(source + '/images/**/*')
+  return gulp.src(source + '/images/**/*')
+    .pipe(newer(dist + '/images'))
     .pipe(imageMin({
       interlaced: true,
       progressive: true,
-      optimizationLevel: 5,
+      optimizationLevel: 6,
       svgoPlugins: [{
         removeViewBox: true
       }]
@@ -152,28 +128,39 @@ gulp.task('images', () => {
     .pipe(gulp.dest(dist + '/images'));
 });
 
+gulp.task('fonts', () => {
+  return gulp.src(source + '/fonts/**/*')
+    .pipe(newer(dist + '/fonts'))
+    .pipe(gulp.dest(dist + '/fonts'));
+});
+
 gulp.task('serve', () => {
   runsequence('build', () => {
     browserSync.init({
-      notify: true,
-      port: 9000,
       server: {
         baseDir: [source, dist],
         routes: {
           '/node_modules': 'node_modules'
         }
-      }
+      },
+      notify: false,
+      open: false,
+      port: 9000
     });
 
     gulp.watch([
-      source + '/**/*.html',
-      source + '/images/**/*',
+      dist + '/fonts/**/*',
+      dist + '/images/**/*',
+      './app',
+      './resources'
     ]).on('change', reload);
 
     gulp.watch(source + '/styles/**/*.scss', ['coreStyles', 'asyncStyles']);
-    gulp.watch(source + '/scripts/**/*.js', ['scripts']);
+    gulp.watch(source + '/scripts/app/**/*.js', ['scripts']);
+    gulp.watch(source + '/scripts/lazy/**/*.js', ['lazy']);
   });
 });
+
 
 gulp.task('serve:dist', ['default'], () => {
   browserSync.init({
@@ -186,16 +173,13 @@ gulp.task('serve:dist', ['default'], () => {
 });
 
 gulp.task('gzip', () => {
-  gulp.src([dist + '/*.js', dist + './dist/*.css'])
+  return gulp.src([dist + '/*.js', dist + '/*.css'])
     .pipe(gzip())
     .pipe(gulp.dest(dist));
 });
 
-gulp.task('syncpkg', () => {
-  syncpkg(['!devDependencies'])
-});
 gulp.task('build', () => {
-  runsequence('syncpkg', ['vendors', 'scripts', 'coreStyles', 'asyncStyles', 'html', 'images'], 'gzip')
+  runsequence(['vendors', 'scripts', 'coreStyles', 'asyncStyles', 'html', 'images', 'fonts'], 'gzip')
 });
 
 gulp.task('default', () => {

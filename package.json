@@ -1,26 +1,25 @@
 {
   "private": true,
   "engines": {
-    "node": ">=7.10.0"
+    "node": ">=8.8.0"
   },
   "scripts": {
-    "preinstall": "sudo npm i -g gulp bower",
-    "postinstall": "bower install",
     "start": "gulp serve",
-    "serve": "gulp serve:dist",
-    "compile": "gulp"
+    "prod": "gulp serve:dist --production",
+    "build": "gulp build --production && gulp gzip"
   },
   "devDependencies": {
     "autoprefixer": "latest",
     "babel-core": "latest",
-    "babel-plugin-angularjs-annotate": "^0.8.0",
-    "babel-preset-es2015": "^6.24.1",
+    "babel-generator": "latest",
+    "babel-plugin-transform-es2015-modules-systemjs": "latest",
+    "babel-preset-env": "latest",
     "browser-sync": "latest",
     "css-mqpacker": "latest",
     "cssnano": "latest",
     "del": "latest",
     "flamework": "latest",
-    "gulp": "latest",
+    "gulp": "^3.9.1",
     "gulp-babel": "latest",
     "gulp-cache": "latest",
     "gulp-concat": "latest",
@@ -29,19 +28,21 @@
     "gulp-htmlmin": "latest",
     "gulp-if": "latest",
     "gulp-imagemin": "latest",
+    "gulp-newer": "latest",
     "gulp-postcss": "latest",
+    "gulp-rev": "latest",
     "gulp-sass": "latest",
     "gulp-size": "latest",
     "gulp-sourcemaps": "latest",
     "gulp-uglify": "latest",
-    "main-bower-files": "latest",
-    "run-sequence": "latest",
-    "sync-pkg": "latest",
-    "wiredep": "latest"
+    "moment": "^2.19.1",
+    "pace-js": ">=1.0.2",
+    "run-sequence": "^2.2.0",
+    "yargs": "^9.0.1"
   },
   "dependencies": {
-    "angular": "^1.6.6",
     "gsap": "latest",
-    "jquery": "latest"
+    "jquery": "latest",
+    "popper.js": "^1.12.5"
   }
 }
