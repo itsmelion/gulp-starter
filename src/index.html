@@ -2,6 +2,9 @@
 <html lang="en-GB">
 
 <head>
+  <link rel=dns-prefetch href="//fonts.google.com">
+  <link rel=preconnect href="//fonts.google.com">
+
   <meta charset="utf-8">
   <meta name="description" content="Shallom World! This is Alia's web scaffold">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -29,7 +32,12 @@
   <meta name="msapplication-wide310x150logo" content="images/favicons/mstile-310x150.png" />
   <meta name="msapplication-square310x310logo" content="images/favicons/mstile-310x310.png" />
 
-  <link rel="stylesheet" href="main.css">
+  <link rel=preload href="/main.css" as="style">
+  <link rel=preload href="/vendors.js" as="script"></link>
+  <link rel=preload href="/app.js" as="script"></link>
+  <link async rel=prefetch src="/lazy.js" as="script"></link>
+  <link async rel=prefetch src="/async.css" as="style"></link>
+  <link rel="stylesheet" href="/main.css">
   <!-- bower:css -->
   <!-- endbower -->
 </head>
@@ -37,12 +45,14 @@
 <body>
   <!--[if IE]> <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p> <![endif]-->
   <h1>Gulp BoilerPlate</h1>
-  <link rel="stylesheet" async defer href="async.css">
 
 
   <!-- bower:js -->
   <!-- endbower -->
-  <script src="scripts/main.js"></script>
+  <link rel="stylesheet" async defer href="/async.css">
+  <script src="/app.js"></script>
+  <script src="/vendors.js"></script>
+  <script async src="/lazy.js"></script>
 </body>
 
 </html>

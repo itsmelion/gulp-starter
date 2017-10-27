@@ -1,4 +1,4 @@
-$(function () {
+$(window).on("load", function () {
   // Start Parallax
 
   /* detect touch */
