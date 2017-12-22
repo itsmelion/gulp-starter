@@ -2,8 +2,8 @@
 <html lang="en-GB">
 
 <head>
-  <link rel=dns-prefetch href="//fonts.google.com">
-  <link rel=preconnect href="//fonts.google.com">
+  <!-- <link rel=dns-prefetch href="//fonts.google.com">
+  <link rel=preconnect href="//fonts.google.com"> -->
 
   <meta charset="utf-8">
   <meta name="description" content="Shallom World! This is Alia's web scaffold">
@@ -35,24 +35,19 @@
   <link rel=preload href="/main.css" as="style">
   <link rel=preload href="/vendors.js" as="script"></link>
   <link rel=preload href="/app.js" as="script"></link>
-  <link async rel=prefetch src="/lazy.js" as="script"></link>
-  <link async rel=prefetch src="/async.css" as="style"></link>
+  <link rel=prefetch href="/async.js" as="script"></link>
+  <link rel=prefetch href="/async.css" as="style"></link>
   <link rel="stylesheet" href="/main.css">
-  <!-- bower:css -->
-  <!-- endbower -->
 </head>
 
 <body>
   <!--[if IE]> <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p> <![endif]-->
   <h1>Gulp BoilerPlate</h1>
 
-
-  <!-- bower:js -->
-  <!-- endbower -->
   <link rel="stylesheet" async defer href="/async.css">
-  <script src="/app.js"></script>
   <script src="/vendors.js"></script>
-  <script async src="/lazy.js"></script>
+  <script src="/app.js"></script>
+  <script async defer src="/async.js"></script>
 </body>
 
 </html>

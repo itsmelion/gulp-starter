@@ -3,10 +3,12 @@ const source = './src';
 const dist = './build';
 
 const vendors = [
-  // "./node_modules/moment/min/moment.min.js",
+  "./node_modules/pace-js/pace.min.js",
+  "./node_modules/jquery/dist/jquery.min.js",
+  "./node_modules/moment/min/moment.min.js",
   // "./node_modules/gsap/TweenLite.js",
-  "./node_modules/photoswipe/dist/photoswipe.js",
-  "./node_modules/photoswipe/dist/photoswipe-ui-default.js",
+  // "./node_modules/photoswipe/dist/photoswipe.js",
+  // "./node_modules/photoswipe/dist/photoswipe-ui-default.js",
   source + '/vendors/*.js'
 ];
 
@@ -68,17 +70,13 @@ gulp.task('asyncStyles', () => {
 
 gulp.task('scripts', () => {
   return gulp.src(source + '/scripts/app/**/*.js')
-    .pipe(gulpif(argv.production, sourcemaps.init()))
+    .pipe(gulpif(!argv.production, sourcemaps.init()))
     .pipe(babel({
-      "presets": ["env", {
-        "targets": {
-          "browsers": ["last 2 versions", "safari >= 7"]
-        }
-      }]
+      "presets": ["env"]
     }))
     .pipe(concat('app.js'))
     .pipe(gulpif(argv.production, uglify()))
-    .pipe(gulpif(argv.production, sourcemaps.write(dist)))
+    .pipe(gulpif(!argv.production, sourcemaps.write()))
     .pipe(gulp.dest(dist))
     .pipe(reload({
       stream: true
@@ -87,22 +85,25 @@ gulp.task('scripts', () => {
 
 gulp.task('vendors', () => {
   return gulp.src(vendors)
-    .pipe(gulpif(argv.production, sourcemaps.init()))
+    .pipe(gulpif(!argv.production, sourcemaps.init()))
     .pipe(concat('vendors.js'))
-    .pipe(gulpif(argv.production, uglify()))
-    .pipe(gulpif(argv.production, sourcemaps.write(dist)))
+    .pipe(uglify())
+    .pipe(gulpif(!argv.production, sourcemaps.write()))
     .pipe(gulp.dest(dist))
     .pipe(reload({
       stream: true
     }));
 });
 
-gulp.task('lazy', () => {
-  return gulp.src(['./node_modules/pace-js/pace.min.js', source + '/scripts/lazy/*.js'])
-    .pipe(gulpif(argv.production, sourcemaps.init()))
-    .pipe(concat('lazy.js'))
+gulp.task('async', () => {
+  return gulp.src(source + '/scripts/async/*.js')
+    .pipe(gulpif(!argv.production, sourcemaps.init()))
+    .pipe(babel({
+      "presets": ["env"]
+    }))
+    .pipe(concat('async.js'))
     .pipe(gulpif(argv.production, uglify()))
-    .pipe(gulpif(argv.production, sourcemaps.write(".")))
+    .pipe(gulpif(!argv.production, sourcemaps.write()))
     .pipe(gulp.dest(dist))
     .pipe(reload({
       stream: true
@@ -143,59 +144,56 @@ gulp.task('fonts', () => {
     .pipe(gulp.dest(dist + '/fonts'));
 });
 
-gulp.task("revision", function () {
-  return gulp.src([dist + "/**/*.css", dist + "/**/*.js"])
+gulp.task("rev", function () {
+  return gulp.src([dist + "/**/*.css", dist + "/**/*.js", dist + "/**/*.gz"])
     .pipe(rev())
     .pipe(gulp.dest(dist))
     .pipe(rev.manifest())
     .pipe(gulp.dest(dist))
 });
-gulp.task("revreplace", ["revision"], function () {
+gulp.task("revision", ["rev"], function () {
   var manifest = gulp.src(dist + "/rev-manifest.json");
 
-  return gulp.src(opt.srcFolder + "/index.html")
+  return gulp.src(dist + "/index.html")
     .pipe(revReplace({
       manifest: manifest
     }))
     .pipe(gulp.dest(dist));
 });
 
-gulp.task('serve', () => {
-  runsequence('build', () => {
-    // Files that requires build tasks
-    gulp.watch(source + '/styles/**/*.scss', ['coreStyles', 'asyncStyles']);
-    gulp.watch(source + '/scripts/app/**/*.js', ['scripts']);
-    gulp.watch(source + '/scripts/lazy/**/*.js', ['lazy']);
-    gulp.watch(source + '/**/*.html', ['html']);
+gulp.task('serve', ['build'], () => {
+  // Files that requires build tasks
+  gulp.watch(source + '/styles/**/*.scss', ['coreStyles', 'asyncStyles']);
+  gulp.watch(source + '/scripts/app/**/*.js', ['scripts']);
+  gulp.watch(source + '/scripts/async/**/*.js', ['async']);
+  gulp.watch(source + '/**/*.html', ['html']);
 
-    // Reload Files
-    gulp.watch([
-      dist + '/fonts/**/*',
-      dist + '/images/**/*',
-      dist + '/index.html',
-      './app',
-      './resources',
-    ]).on('change', reload);
+  // Reload Files
+  gulp.watch([
+    dist + '/fonts/**/*',
+    dist + '/images/**/*',
+    dist + '/index.html',
+    './app',
+    './resources',
+  ]).on('change', reload);
 
-    browserSync.init({
-      server: {
-        baseDir: [source, dist],
-        routes: {
-          '/node_modules': 'node_modules'
-        }
-      },
-      notify: true,
-      open: false,
-      port: 9000,
-      logLevel: "info",
-      logConnections: false,
-      logPrefix: project
-    });
+  browserSync.init({
+    server: {
+      baseDir: [dist],
+      routes: {
+        '/node_modules': 'node_modules'
+      }
+    },
+    notify: true,
+    open: false,
+    port: 9000,
+    logLevel: "info",
+    logConnections: false,
+    logPrefix: project
   });
 });
 
-
-gulp.task('serve:dist', ['default'], () => {
+gulp.task('serve:prod', () => {
   browserSync.init({
     notify: true,
     port: 9000,
@@ -219,14 +217,13 @@ gulp.task('delete', function () {
 
 gulp.task('build', () => {
   runsequence([
-    'delete',
-    //Scripts
-    'vendors', 'scripts', 'lazy',
-    //Styles
-    'coreStyles', 'asyncStyles',
-    //other
-    'fonts', 'images', 'html', 'gzip',
-    // revision
-    'revision', 'revreplace'
-  ])
+      //Scripts
+      'vendors', 'scripts', 'async',
+      //Styles
+      'coreStyles', 'asyncStyles',
+      'html',
+      'fonts', 'images'
+    ], // revision
+    'gzip'
+  )
 });

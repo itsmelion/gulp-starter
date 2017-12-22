@@ -4,9 +4,9 @@
     "node": ">=9.3.x"
   },
   "scripts": {
-    "start": "gulp serve",
-    "prod": "gulp serve:dist --production",
-    "build": "gulp build --production && gulp gzip"
+    "start": "gulp delete && gulp serve",
+    "build": "gulp delete && gulp build --production && gulp revision",
+    "serve:prod": "gulp serve:prod"
   },
   "devDependencies": {
     "ajv": "^5.5.2",
