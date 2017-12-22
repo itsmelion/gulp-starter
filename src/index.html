@@ -36,7 +36,8 @@
   <link rel=preload href="/vendors.js" as="script"></link>
   <link rel=preload href="/app.js" as="script"></link>
   <link rel=prefetch href="/async.js" as="script"></link>
-  <link rel=prefetch href="/async.css" as="style"></link>
+  <link rel=prefetch href="/async.css" as="style" onload="this.rel=stylesheet"></link>
+  <link rel="stylesheet" href="/async.css" media="bogus" />
   <link rel="stylesheet" href="/main.css">
 </head>
 
@@ -44,7 +45,7 @@
   <!--[if IE]> <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p> <![endif]-->
   <h1>Gulp BoilerPlate</h1>
 
-  <link rel="stylesheet" async defer href="/async.css">
+  <link rel="stylesheet" async defer href="/async.css" lazyload="1">
   <script src="/vendors.js"></script>
   <script src="/app.js"></script>
   <script async defer src="/async.js"></script>
