@@ -1,0 +1,21 @@
+.blog {
+  @media #{$grid-sm} {
+    >.col-md-12 {
+      padding: 0;
+    }
+  }
+  .col-md-1:not(.label) {
+    color: $black3;
+    @media #{$grid-sm} {
+      display: none;
+    }
+  }
+  .col-md-5 {
+    font-size: 120%;
+  }
+}
+
+.page-header {
+  border-bottom: 0;
+  margin: 0;
+}
