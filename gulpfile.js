@@ -1,10 +1,13 @@
 const project = "GulpStarter";
 const source = './src';
 const dist = './build';
+const URL = 'localhost:9000';
 
 const vendors = [
   "./node_modules/pace-js/pace.min.js",
   "./node_modules/jquery/dist/jquery.min.js",
+  // "./node_modules/popper.js/dist/umd/popper.min.js",
+  // "./node_modules/bootstrap/dist/js/bootstrap.min.js",
   "./node_modules/moment/min/moment.min.js",
   // "./node_modules/gsap/TweenLite.js",
   // "./node_modules/photoswipe/dist/photoswipe.js",
@@ -12,30 +15,45 @@ const vendors = [
   source + '/vendors/*.js'
 ];
 
-const gulp = require('gulp');
-const autoprefixer = require('autoprefixer');
-const browserSync = require('browser-sync').create();
-const postcss = require('gulp-postcss');
 const del = require('del');
-const mqpacker = require('css-mqpacker');
-const cssnano = require('cssnano');
-const babel = require('gulp-babel');
-const concat = require('gulp-concat');
-const uglify = require('gulp-uglify');
-const htmlmin = require('gulp-htmlmin');
-const gulpif = require('gulp-if');
+const gulp = require('gulp');
+
+// Image Opstimization
 const imageMin = require('gulp-imagemin');
-const sass = require('gulp-sass');
+const newer = require('gulp-newer'); //See if file is newer
+
+//Utilities
+const argv = require('yargs').argv; //Get arguments from CLI
+const gulpif = require('gulp-if'); // use if on pipe streamlines
 const sourcemaps = require('gulp-sourcemaps');
+// const rename = require('gulp-rename');
+// const notify = require('gulp-notify');
+const concat = require('gulp-concat');
 const runsequence = require('run-sequence');
+
+// JS
+const babel = require('gulp-babel');
+const uglify = require('gulp-uglify');
+
+// CSS
+const mqpacker = require('css-mqpacker'); // Pack all @media queries
+const cssnano = require('cssnano');
+const postcss = require('gulp-postcss');
+const sass = require('gulp-sass');
+const autoprefixer = require('autoprefixer');
+
+//Compression and Cache Optimization
 const gzip = require('gulp-gzip');
 const rev = require('gulp-rev');
 const revReplace = require('gulp-rev-replace');
-const useref = require('gulp-useref');
-const newer = require('gulp-newer');
-const argv = require('yargs').argv;
+// const useref = require('gulp-useref');
+const htmlmin = require('gulp-htmlmin');
+
+// Server
+const browserSync = require('browser-sync').create();
 const reload = browserSync.reload;
 
+// ############ Styles ###############
 gulp.task('coreStyles', () => {
   return gulp.src(source + '/styles/main.scss')
     .pipe(sass.sync({
@@ -52,6 +70,7 @@ gulp.task('coreStyles', () => {
     }));
 });
 
+// CSS with trivial rules (in separate file for optimizations like LazyLoad)
 gulp.task('asyncStyles', () => {
   return gulp.src(source + '/styles/async.scss')
     .pipe(sass.sync({
@@ -68,6 +87,7 @@ gulp.task('asyncStyles', () => {
     }));
 });
 
+// ############ Scripts ###############
 gulp.task('scripts', () => {
   return gulp.src(source + '/scripts/app/**/*.js')
     .pipe(gulpif(!argv.production, sourcemaps.init()))
@@ -95,6 +115,7 @@ gulp.task('vendors', () => {
     }));
 });
 
+// JS with trivial rules (in separate file for optimizations like LazyLoad)
 gulp.task('async', () => {
   return gulp.src(source + '/scripts/async/*.js')
     .pipe(gulpif(!argv.production, sourcemaps.init()))
@@ -124,6 +145,7 @@ gulp.task('html', () => {
     .pipe(gulp.dest(dist));
 });
 
+// ############ Images ###############
 gulp.task('images', () => {
   return gulp.src(source + '/images/**/*')
     .pipe(newer(dist + '/images'))
@@ -210,7 +232,17 @@ gulp.task('gzip', () => {
 });
 
 gulp.task('delete', function () {
-  return del([dist + '/**', '**/.sass-cache', '**/.DS_Store']).then(paths => {
+  return del([
+    '**/.sass-cache',
+    '**/.DS_Store',
+    '**/Thumbs.db',
+    dist + '/**',
+    '!' + dist,
+    '!' + dist + '/fonts',
+    '!' + dist + '/images',
+    '!' + dist + '/fonts/**/*',
+    '!' + dist + '/images/**/*'
+  ]).then(paths => {
     console.log('Deleted files and folders:\n', paths.join('\n'));
   });
 });
